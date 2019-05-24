@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(serial)
 
 # Find catkin
-find_package(catkin REQUIRED)
+find_package(catkin)
 
 if(APPLE)
     find_library(IOKIT_LIBRARY IOKit)
@@ -13,17 +13,27 @@ if(UNIX AND NOT APPLE)
     # If Linux, add rt and pthread
     set(rt_LIBRARIES rt)
     set(pthread_LIBRARIES pthread)
-    catkin_package(
-        LIBRARIES ${PROJECT_NAME}
-        INCLUDE_DIRS include
-        DEPENDS rt pthread
-    )
+
+    if (CATKIN_FOUND)
+        catkin_package(
+                LIBRARIES ${PROJECT_NAME}
+                INCLUDE_DIRS include
+                DEPENDS rt pthread
+        )
+    endif()
 else()
-    # Otherwise normal call
-    catkin_package(
-        LIBRARIES ${PROJECT_NAME}
-        INCLUDE_DIRS include
-    )
+    if (CATKIN_FOUND)
+        # Otherwise normal call
+        catkin_package(
+                LIBRARIES ${PROJECT_NAME}
+                INCLUDE_DIRS include
+        )
+    endif()
+endif()
+
+if (NOT CATKIN_FOUND)
+    set(CATKIN_PACKAGE_LIB_DESTINATION lib)
+    set(CATKIN_GLOBAL_INCLUDE_DESTINATION include)
 endif()
 
 ## Sources
