@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8.3)
 project(serial)
 
 # Find catkin
-find_package(catkin)
+if(NOT DISABLE_CATKIN)
+    find_package(catkin)
+endif()
 
 if(APPLE)
     find_library(IOKIT_LIBRARY IOKit)
